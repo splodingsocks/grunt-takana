@@ -102,15 +102,13 @@ If you specify `options`, they will be passed along to the [node-sass](https://g
 
 ```javascript
 grunt.initConfig({
-  sass: {
-    dist: {
-      options: {
-        includePaths: ['imports/are/here/'],
-        outputStyle: 'nested'
-      },
-      files: {
-        'main.css': 'main.scss'
-      }
+  takana: {
+    options: {
+      includePaths: ['imports/are/here/'],
+      outputStyle: 'nested'
+    },
+    files: {
+      'main.css': 'main.scss'
     }
   }
 });
@@ -123,11 +121,44 @@ You can also compile multiple files into multiple destinations.
 
 ```javascript
 grunt.initConfig({
-  sass: {
+  takana: {
     files: {
       'main.css': 'main.scss',
       'widgets.css': 'widgets.sass'
     }
   }
 });
+```
+
+### Use Takana in a task
+
+Just add `takana` as a subtask:
+
+```javascript
+grunt.registerTask('server', ['foo', 'takana']);
+```
+
+### Compiling multiple scss files concisely
+
+Grunt 0.4 brings some niceties when configuring tasks. Perticularly, the file object can be used to watch multiple .scss files, and output them as .css files respectively:
+
+```javascript
+module.exports = function(grunt) {
+  grunt.initConfig({
+    takana: {
+      options: {
+        # Where your @imported files live:
+        includePaths: ["path/to/_partials"]
+      },
+      files: {
+        expand: true,
+        cwd: "path/to/styles/",
+        src: "**/*.scss",
+        dest: "output/path/",
+        ext: ".css"
+      }
+    }
+  });
+};
+
 ```
